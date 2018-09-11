@@ -15,7 +15,11 @@ mongodb.uri = ${?MONGO_URI}
 ```
 include "dev"
 ```
-然后将`conf/dev.conf`写入`.gitignore`文件：
+然后开发人员就可以在`conf/dev.conf`文件中增加自定义配置项，例如自定义`mongodb.uri`配置：
+```
+mongodb.uri = "mongodb://user:password@host:port/db?authMode=scram-sha1"
+```
+最后将`conf/dev.conf`加入`.gitignore`文件，提示Git忽略该文件：
 ```
 logs
 target
