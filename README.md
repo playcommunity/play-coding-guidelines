@@ -28,4 +28,10 @@ conf/dev.conf
 ```
 
 ## MongoDB设计
-如果 Collection 未设计删除字段标记，则尽量使用有意义的主键，例如用户表`_id`字段尽量存放用户邮箱信息。这样设计的目的是为了方便通过 `ChangeStreams` 功能实时同步MongoDB信息，因为删除操作在 `ChangeStreams` 中包含`_id`信息。
+### 实时同步设计
+在利用 `ChangeStreams` 实现实时同步功能时，要注意以下设计要点：
+- 如果 Collection 未设计删除字段标记，则尽量使用有意义的主键，例如用户表主键`_id`存放用户的唯一标识(如邮箱)。这样设计的目的是因为删除操作在 `ChangeStreams` 中仅包含`_id`信息而不包含源文档信息。
+- Collection尽量包含方便记录日志字段，如`addTime`, `updateTime`, `operator`。
+
+### 性能优化
+- 如果 Collection 包含一个内容较长的字符串类型字段，并且需要经常执行`$eq`查询，则应该为该字段新增一个带索引的hash字段，在执行`$eq`查询时使用hash值进行比较。
